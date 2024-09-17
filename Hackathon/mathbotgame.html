@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 100px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p id="question" class="question"></p>
+        <input type="text" id="answer" placeholder="Your answer">
+        <br>
+        <button onclick="checkAnswer()">Submit</button>
+        <button onclick="nextQuestion()">Next Question</button>
+        <p id="result" class="result"></p>
+    </div>
+
+    <script>
+        let num1, num2, operator, correctAnswer;
+
+        function getRandomNumber(max) {
+            return Math.floor(Math.random() * max) + 1;
+        }
+
+        function getRandomOperator() {
+            const operators = ['+', '-', '*', '/'];
+            return operators[Math.floor(Math.random() * operators.length)];
+        }
+
+        function generateQuestion() {
+            num1 = getRandomNumber(20); // Numbers between 1 and 20
+            num2 = getRandomNumber(20);
+            operator = getRandomOperator();
+            
+            // Calculate the correct answer based on the operator
+            switch (operator) {
+                case '+':
+                    correctAnswer = num1 + num2;
+                    break;
+                case '-':
+                    correctAnswer = num1 - num2;
+                    break;
+                case '*':
+                    correctAnswer = num1 * num2;
+                    break;
+                case '/':
+                    // Ensure no division by zero and whole number results
+                    while (num2 === 0 || num1 % num2 !== 0) {
+                        num1 = getRandomNumber(20);
+                        num2 = getRandomNumber(20);
+                    }
+                    correctAnswer = num1 / num2;
+                    break;
+            }
+
+            document.getElementById('question').textContent = `${num1} ${operator} ${num2} = ?`;
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer').value);
+            const resultElement = document.getElementById('result');
+
+            if (userAnswer === correctAnswer) {
+                resultElement.textContent = 'Correct!';
+                resultElement.style.color = 'green';
+            } else {
+                resultElement.textContent = 'Wrong!';
+                resultElement.style.color = 'red';
+            }
+        }
+
+        function nextQuestion() {
+            generateQuestion();
+            document.getElementById('answer').value = '';
+            document.getElementById('result').textContent = '';
+        }
+
+        // Initialize the first question
+        generateQuestion();
+    </script>
+</body>
+</html>
